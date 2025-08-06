@@ -149,7 +149,7 @@ This platform compiles publicly available data for educational purposes. All rig
 
 Let's also update the package.json scripts for better Vercel compatibility:
 
-```json type="code" project="package" file="package.json"
+\`\`\`json type="code" project="package" file="package.json"
 [v0-no-op-code-block-prefix]{
   "name": "political-truth-tracker",
   "version": "0.1.0",
