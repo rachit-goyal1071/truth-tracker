@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -13,99 +11,62 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { X, Filter, Search } from 'lucide-react';
+import { X, Filter } from 'lucide-react';
 
-interface FilterOption {
-  value: string;
-  label: string;
-}
-
-interface FilterConfig {
-  [key: string]: FilterOption[];
-}
+import { FilterOptions } from '@/lib/types';
 
 interface FilterPanelProps {
-  filters?: FilterConfig;
-  onFiltersChange?: (filters: Record<string, string | undefined>) => void;
-  searchPlaceholder?: string;
-  onSearchChange?: (search: string) => void;
+  onFilterChange: (filters: FilterOptions) => void;
+  showYearFilter?: boolean;
+  showPartyFilter?: boolean;
+  showStatusFilter?: boolean;
+  showStateFilter?: boolean;
+  showCategoryFilter?: boolean;
+  showDateRangeFilter?: boolean;
+  availableCategories?: string[];
   className?: string;
 }
 
 export default function FilterPanel({
-  filters = {},
-  onFiltersChange = () => {},
-  searchPlaceholder = "Search...",
-  onSearchChange = () => {},
+  onFilterChange,
+  showYearFilter = false,
+  showPartyFilter = false,
+  showStatusFilter = false,
+  showStateFilter = false,
+  showCategoryFilter = false,
+  showDateRangeFilter = false,
+  availableCategories = [],
   className = ""
 }: FilterPanelProps) {
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({});
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleFilterChange = (filterKey: string, value: string) => {
-    const newFilters = { ...activeFilters };
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters };
     
-    if (value === 'all' || !value) {
-      delete newFilters[filterKey];
+    if (value === '' || value === 'all') {
+      delete newFilters[key as keyof FilterOptions];
     } else {
-      newFilters[filterKey] = value;
+      (newFilters as any)[key] = value;
     }
     
-    setActiveFilters(newFilters);
-    
-    // Convert to the format expected by parent component
-    const filtersForParent: Record<string, string | undefined> = {};
-    Object.keys(filters).forEach(key => {
-      filtersForParent[key] = newFilters[key] || undefined;
-    });
-    
-    onFiltersChange(filtersForParent);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    onSearchChange(value);
+    setFilters(newFilters);
+    onFilterChange(newFilters);
   };
 
   const clearAllFilters = () => {
-    setActiveFilters({});
-    setSearchTerm('');
-    
-    const clearedFilters: Record<string, string | undefined> = {};
-    Object.keys(filters).forEach(key => {
-      clearedFilters[key] = undefined;
-    });
-    
-    onFiltersChange(clearedFilters);
-    onSearchChange('');
+    setFilters({});
+    onFilterChange({});
   };
 
-  const removeFilter = (filterKey: string) => {
-    handleFilterChange(filterKey, 'all');
+  const removeFilter = (key: string) => {
+    handleFilterChange(key, '');
   };
 
-  const activeFilterCount = Object.keys(activeFilters).length;
-  const hasFilters = Object.keys(filters).length > 0;
+  const activeFilterCount = Object.keys(filters).length;
+  const hasAnyFilter = showYearFilter || showPartyFilter || showStatusFilter || showStateFilter || showCategoryFilter;
 
-  if (!hasFilters) {
-    return (
-      <Card className={className}>
-        <CardContent className="p-4">
-          <div className="flex items-center space-x-2">
-            <Search className="w-4 h-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="flex-1"
-            />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (!hasAnyFilter) return null;
 
   return (
     <Card className={className}>
@@ -144,63 +105,128 @@ export default function FilterPanel({
       </CardHeader>
       
       <CardContent className={`space-y-4 ${!isExpanded ? 'hidden md:block' : ''}`}>
-        {/* Search */}
-        <div className="space-y-2">
-          <Label htmlFor="search">Search</Label>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              id="search"
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
-
         {/* Filter Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Object.entries(filters).map(([filterKey, options]) => (
-            <div key={filterKey} className="space-y-2">
-              <Label htmlFor={filterKey}>
-                {filterKey.charAt(0).toUpperCase() + filterKey.slice(1).replace(/([A-Z])/g, ' $1')}
-              </Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {showPartyFilter && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Party</label>
               <Select
-                value={activeFilters[filterKey] || 'all'}
-                onValueChange={(value) => handleFilterChange(filterKey, value)}
+                value={filters.party || ''}
+                onValueChange={(value) => handleFilterChange('party', value)}
               >
-                <SelectTrigger id={filterKey}>
-                  <SelectValue placeholder="Select..." />
+                <SelectTrigger>
+                  <SelectValue placeholder="All Parties" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  {options && options.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                  <SelectItem value="">All Parties</SelectItem>
+                  <SelectItem value="BJP">BJP</SelectItem>
+                  <SelectItem value="Congress">Congress</SelectItem>
+                  <SelectItem value="AAP">AAP</SelectItem>
+                  <SelectItem value="TMC">TMC</SelectItem>
+                  <SelectItem value="DMK">DMK</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {showYearFilter && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Year</label>
+              <Select
+                value={filters.year?.toString() || ''}
+                onValueChange={(value) => handleFilterChange('year', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All Years" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Years</SelectItem>
+                  <SelectItem value="2024">2024</SelectItem>
+                  <SelectItem value="2023">2023</SelectItem>
+                  <SelectItem value="2022">2022</SelectItem>
+                  <SelectItem value="2021">2021</SelectItem>
+                  <SelectItem value="2020">2020</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {showStatusFilter && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Status</label>
+              <Select
+                value={filters.status || ''}
+                onValueChange={(value) => handleFilterChange('status', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="Kept">Kept</SelectItem>
+                  <SelectItem value="Broken">Broken</SelectItem>
+                  <SelectItem value="In Progress">In Progress</SelectItem>
+                  <SelectItem value="Dropped">Dropped</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {showStateFilter && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">State</label>
+              <Select
+                value={filters.state || ''}
+                onValueChange={(value) => handleFilterChange('state', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All States" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All States</SelectItem>
+                  <SelectItem value="Delhi">Delhi</SelectItem>
+                  <SelectItem value="Maharashtra">Maharashtra</SelectItem>
+                  <SelectItem value="Karnataka">Karnataka</SelectItem>
+                  <SelectItem value="Tamil Nadu">Tamil Nadu</SelectItem>
+                  <SelectItem value="West Bengal">West Bengal</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {showCategoryFilter && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category</label>
+              <Select
+                value={filters.category || ''}
+                onValueChange={(value) => handleFilterChange('category', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Categories</SelectItem>
+                  {availableCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Active Filters */}
         {activeFilterCount > 0 && (
           <div className="space-y-2">
-            <Label>Active Filters:</Label>
+            <label className="text-sm font-medium">Active Filters:</label>
             <div className="flex flex-wrap gap-2">
-              {Object.entries(activeFilters).map(([key, value]) => {
-                const filterConfig = filters[key];
-                const option = filterConfig?.find(opt => opt.value === value);
-                const label = option?.label || value;
-                
+              {Object.entries(filters).map(([key, value]) => {
                 return (
                   <Badge key={key} variant="secondary" className="flex items-center gap-1">
                     <span className="text-xs font-medium">
-                      {key}: {label}
+                      {key}: {value}
                     </span>
                     <Button
                       variant="ghost"
