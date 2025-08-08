@@ -48,6 +48,27 @@ export interface FactCheck {
   proof_link: string;
 }
 
+export interface CommodityPrice {
+  id: string;
+  name: string;
+  unit: string;
+  category: 'Fuel' | 'Food' | 'Utilities' | 'Transport';
+  yearlyData: Record<string, number>;
+  lastUpdated: string;
+  description?: string;
+}
+
+export interface NationalIndicator {
+  id: string;
+  name: string;
+  unit: string;
+  category: 'Economic' | 'Social' | 'Development' | 'Governance';
+  yearlyData: Record<string, number>;
+  lastUpdated: string;
+  description?: string;
+  source?: string;
+}
+
 export interface User {
   uid: string;
   email: string;

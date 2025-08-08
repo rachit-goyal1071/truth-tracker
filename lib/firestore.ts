@@ -14,7 +14,7 @@ import {
   DocumentData
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { Promise, ElectoralBond, PriceData, Incident, FactCheck, FilterOptions } from './types';
+import { Promise, ElectoralBond, PriceData, Incident, FactCheck, FilterOptions, CommodityPrice, NationalIndicator } from './types';
 
 // Generic CRUD operations
 export const createDocument = async (collectionName: string, data: any) => {
@@ -134,6 +134,38 @@ export const getIncidents = (filters?: FilterOptions) =>
 
 export const getFactChecks = (filters?: FilterOptions) => 
   getFilteredDocuments('fact_checks', filters);
+
+// Commodity Prices functions
+export const getCommodityPrices = (filters?: FilterOptions) => 
+  getFilteredDocuments('commodity_prices', filters);
+
+export const getCommodityPrice = (id: string) => 
+  getDocument('commodity_prices', id);
+
+export const createCommodityPrice = (data: Omit<CommodityPrice, 'id'>) => 
+  createDocument('commodity_prices', data);
+
+export const updateCommodityPrice = (id: string, data: Partial<CommodityPrice>) => 
+  updateDocument('commodity_prices', id, data);
+
+export const deleteCommodityPrice = (id: string) => 
+  deleteDocument('commodity_prices', id);
+
+// National Indicators functions
+export const getNationalIndicators = (filters?: FilterOptions) => 
+  getFilteredDocuments('national_indicators', filters);
+
+export const getNationalIndicator = (id: string) => 
+  getDocument('national_indicators', id);
+
+export const createNationalIndicator = (data: Omit<NationalIndicator, 'id'>) => 
+  createDocument('national_indicators', data);
+
+export const updateNationalIndicator = (id: string, data: Partial<NationalIndicator>) => 
+  updateDocument('national_indicators', id, data);
+
+export const deleteNationalIndicator = (id: string) => 
+  deleteDocument('national_indicators', id);
 
 // Search functionality
 export const searchDocuments = async (collectionName: string, searchTerm: string) => {

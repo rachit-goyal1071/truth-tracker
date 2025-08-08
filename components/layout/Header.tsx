@@ -72,7 +72,7 @@ export default function Header() {
     { name: 'Home', href: '/' },
     { name: 'Promises', href: '/promises' },
     { name: 'Electoral Bonds', href: '/electoral-bonds' },
-    { name: 'Prices', href: '/prices' },
+    { name: 'Prices & Indicators', href: '/prices-comparison' },
     { name: 'Incidents', href: '/incidents' },
     { name: 'Fact Checks', href: '/fact-checks' },
   ];
