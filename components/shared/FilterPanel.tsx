@@ -118,7 +118,7 @@ export default function FilterPanel({
                   <SelectValue placeholder="All Parties" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Parties</SelectItem>
+                  <SelectItem value="all">All Parties</SelectItem>
                   <SelectItem value="BJP">BJP</SelectItem>
                   <SelectItem value="Congress">Congress</SelectItem>
                   <SelectItem value="AAP">AAP</SelectItem>
@@ -140,7 +140,7 @@ export default function FilterPanel({
                   <SelectValue placeholder="All Years" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Years</SelectItem>
+                  <SelectItem value="all">All Years</SelectItem>
                   <SelectItem value="2024">2024</SelectItem>
                   <SelectItem value="2023">2023</SelectItem>
                   <SelectItem value="2022">2022</SelectItem>
@@ -162,7 +162,7 @@ export default function FilterPanel({
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="Kept">Kept</SelectItem>
                   <SelectItem value="Broken">Broken</SelectItem>
                   <SelectItem value="In Progress">In Progress</SelectItem>
@@ -183,7 +183,7 @@ export default function FilterPanel({
                   <SelectValue placeholder="All States" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All States</SelectItem>
+                  <SelectItem value="all">All States</SelectItem>
                   <SelectItem value="Delhi">Delhi</SelectItem>
                   <SelectItem value="Maharashtra">Maharashtra</SelectItem>
                   <SelectItem value="Karnataka">Karnataka</SelectItem>
@@ -205,11 +205,13 @@ export default function FilterPanel({
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
-                  {availableCategories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {availableCategories
+                    .filter((category) => typeof category === 'string' && category.trim() !== '')
+                    .map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

@@ -9,9 +9,8 @@ import { auth } from './firebase';
 
 // Admin email addresses - UPDATE WITH YOUR ACTUAL EMAIL
 const ADMIN_EMAILS = [
-  'admin@politicaltruthtracker.com',
-  'your-admin-email@gmail.com', // Replace with your actual Gmail
-  'rachit.goyal1071@gmail.com'  // Add your team member emails
+  'rg410345@gmail.com',
+  'amritansh.raj21@gmail.com' 
 ];
 
 // Google Auth Provider

@@ -14,9 +14,7 @@ const nextConfig = {
       'avatars.githubusercontent.com'
     ]
   },
-  experimental: {
-    serverComponentsExternalPackages: ['firebase-admin']
-  },
+  serverExternalPackages: ['firebase-admin'], // ✅ updated
   env: {
     CUSTOM_KEY: 'political-truth-tracker'
   }

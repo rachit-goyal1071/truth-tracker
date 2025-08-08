@@ -24,7 +24,7 @@ export class AIPromiseAgent {
   private openaiApiKey: string;
 
   constructor() {
-    this.openaiApiKey = process.env.OPENAI_API_KEY || '';
+    this.openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || '';
     if (!this.openaiApiKey) {
       throw new Error('OpenAI API key is required for AI promise extraction');
     }

@@ -79,8 +79,7 @@ Admin access is restricted to whitelisted email addresses. Update the `ADMIN_EMA
 
 \`\`\`typescript
 const ADMIN_EMAILS = [
-  'admin@politicaltruthtracker.com',
-  'your-email@example.com'
+  'rg410345@gmail.com',
 ];
 \`\`\`
 
