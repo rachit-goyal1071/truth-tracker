@@ -120,8 +120,52 @@ export const getFilteredDocuments = async (
 };
 
 // Collection-specific functions
-export const getPromises = (filters?: FilterOptions) => 
-  getFilteredDocuments('promises', filters);
+export const getPromises = async (filters?: FilterOptions) => {
+  try {
+    let q: Query<DocumentData> = collection(db, 'promises');
+    
+    // Apply filters
+    if (filters?.party) {
+      q = query(q, where('party', '==', filters.party));
+    }
+    
+    if (filters?.year) {
+      q = query(q, where('electionYear', '==', filters.year));
+    }
+    
+    if (filters?.status) {
+      q = query(q, where('status', '==', filters.status));
+    }
+    
+    if (filters?.category) {
+      q = query(q, where('category', '==', filters.category));
+    }
+    
+    // Add ordering
+    q = query(q, orderBy('lastVerified', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error getting promises:', error);
+    throw error;
+  }
+};
+
+export const getPromiseById = (id: string) => 
+  getDocument('promises', id);
+
+export const createPromise = (data: Omit<Promise, 'id'>) => 
+  createDocument('promises', data);
+
+export const updatePromise = (id: string, data: Partial<Promise>) => 
+  updateDocument('promises', id, data);
+
+export const deletePromise = (id: string) => 
+  deleteDocument('promises', id);
 
 export const getElectoralBonds = (filters?: FilterOptions) => 
   getFilteredDocuments('electoral_bonds', filters);

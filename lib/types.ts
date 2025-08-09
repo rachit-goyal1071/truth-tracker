@@ -1,13 +1,20 @@
 export interface Promise {
   id: string;
-  party: string;
-  year: number;
-  election_type: string;
+  party: string; // e.g., "BJP"
+  electionYear: number; // e.g., 2019
+  category: string; // e.g., "Economy"
   title: string;
   description: string;
+  sourceManifestoUrl: string; // Link to original manifesto
   status: 'Kept' | 'Broken' | 'In Progress' | 'Dropped';
-  proof_links: string[];
-  date_added: string;
+  evidence: Array<{
+    status: string;
+    date: string; // ISO format
+    sourceUrl: string;
+  }>;
+  lastVerified: string; // ISO date
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ElectoralBond {
