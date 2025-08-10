@@ -8,48 +8,48 @@ export interface DataSource {
 }
 
 export const AUTHORIZED_SOURCES: DataSource[] = [
-  // {
-  //   name: 'Election Commission of India',
-  //   type: 'api',
-  //   url: 'https://eci.gov.in/api/candidate-affidavits',
-  //   active: true
-  // },
-  // {
-  //   name: 'PRS Legislative Research',
-  //   type: 'rss',
-  //   url: 'https://prsindia.org/rss/policy-updates',
-  //   active: true
-  // },
-  // {
-  //   name: 'MyNeta.info',
-  //   type: 'api',
-  //   url: 'https://myneta.info/api/candidates',
-  //   active: true
-  // },
-  // {
-  //   name: 'Factly.in Political Promises',
-  //   type: 'rss',
-  //   url: 'https://factly.in/category/politics/feed/',
-  //   active: true
-  // },
+  {
+    name: 'Election Commission of India',
+    type: 'api',
+    url: 'https://eci.gov.in/api/candidate-affidavits',
+    active: true
+  },
+  {
+    name: 'PRS Legislative Research',
+    type: 'rss',
+    url: 'https://prsindia.org/rss/policy-updates',
+    active: true
+  },
+  {
+    name: 'MyNeta.info',
+    type: 'api',
+    url: 'https://myneta.info/api/candidates',
+    active: true
+  },
+  {
+    name: 'Factly.in Political Promises',
+    type: 'rss',
+    url: 'https://factly.in/category/politics/feed/',
+    active: true
+  },
   {
     name: 'The Wire Politics',
     type: 'rss',
     url: 'https://thewire.in/politics/feed',
     active: true
   },
-  // {
-  //   name: 'Indian Express Politics',
-  //   type: 'rss',
-  //   url: 'https://indianexpress.com/section/india/politics/feed/',
-  //   active: true
-  // },
-  // {
-  //   name: 'Scroll.in Politics',
-  //   type: 'rss',
-  //   url: 'https://scroll.in/politics/feed',
-  //   active: true
-  // }
+  {
+    name: 'Indian Express Politics',
+    type: 'rss',
+    url: 'https://indianexpress.com/section/india/politics/feed/',
+    active: true
+  },
+  {
+    name: 'Scroll.in Politics',
+    type: 'rss',
+    url: 'https://scroll.in/politics/feed',
+    active: true
+  }
 ];
 
 export class DataFetcher {
@@ -87,8 +87,8 @@ export class DataFetcher {
       const xmlText = await response.text();
       
       // Simple RSS parsing - extract content between <description> tags
-      const descriptionRegex = /<description><!\[CDATA\[(.*?)\]\]><\/description>/;
-      const titleRegex = /<title><!\[CDATA\[(.*?)\]\]><\/title>/;
+      const descriptionRegex = /<description><!\[CDATA\[(.*?)\]\]><\/description>/g;
+      const titleRegex = /<title><!\[CDATA\[(.*?)\]\]><\/title>/g;
       
       const descriptions: string[] = [];
       const titles: string[] = [];

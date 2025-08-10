@@ -97,7 +97,7 @@ export default function AdminDashboard() {
       title: 'Data Management',
       description: 'Manage promises, bonds, and incidents',
       icon: Database,
-      href: '/admin/prices',
+      href: '/admin/promises',
       color: 'green',
       badge: 'CRUD'
     },
