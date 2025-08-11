@@ -55,6 +55,18 @@ export interface FactCheck {
   proof_link: string;
 }
 
+export interface PoliticalIncident {
+  id: string;
+  title: string;
+  description: string;
+  category: 'policy-failure' | 'corruption' | 'protest' | 'violence' | 'legal-case' | 'other';
+  date: string; // ISO format
+  source: string; // publication name
+  sourceUrl: string;
+  verified: boolean; // must be true for display
+  addedAt: Date;
+}
+
 export interface CommodityPrice {
   id: string;
   name: string;

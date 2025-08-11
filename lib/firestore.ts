@@ -179,6 +179,75 @@ export const getIncidents = (filters?: FilterOptions) =>
 export const getFactChecks = (filters?: FilterOptions) => 
   getFilteredDocuments('fact_checks', filters);
 
+// Political Incidents functions
+export const getPoliticalIncidents = async (filters?: FilterOptions) => {
+  try {
+    let q: Query<DocumentData> = collection(db, 'political_incidents');
+    
+    // Only get verified incidents for public display
+    q = query(q, where('verified', '==', true));
+    
+    // Apply filters
+    if (filters?.category) {
+      q = query(q, where('category', '==', filters.category));
+    }
+    
+    if (filters?.dateRange) {
+      if (filters.dateRange.start) {
+        q = query(q, where('date', '>=', filters.dateRange.start));
+      }
+      if (filters.dateRange.end) {
+        q = query(q, where('date', '<=', filters.dateRange.end));
+      }
+    }
+    
+    // Add ordering
+    q = query(q, orderBy('date', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error getting political incidents:', error);
+    throw error;
+  }
+};
+
+export const getPendingIncidents = async () => {
+  try {
+    const q = query(
+      collection(db, 'pending_incidents'),
+      orderBy('addedAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error getting pending incidents:', error);
+    throw error;
+  }
+};
+
+export const createPendingIncident = (data: any) => 
+  createDocument('pending_incidents', data);
+
+export const createPoliticalIncident = (data: any) => 
+  createDocument('political_incidents', data);
+
+export const updatePoliticalIncident = (id: string, data: any) => 
+  updateDocument('political_incidents', id, data);
+
+export const deletePoliticalIncident = (id: string) => 
+  deleteDocument('political_incidents', id);
+
+export const deletePendingIncident = (id: string) => 
+  deleteDocument('pending_incidents', id);
+
 // Commodity Prices functions
 export const getCommodityPrices = (filters?: FilterOptions) => 
   getFilteredDocuments('commodity_prices', filters);

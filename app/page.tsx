@@ -7,14 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SearchBar from '@/components/shared/SearchBar';
 import PromiseCard from '@/components/dashboard/PromiseCard';
-import { getPromises, getElectoralBonds, getIncidents, getFactChecks } from '@/lib/firestore';
-import { Promise, ElectoralBond, Incident, FactCheck } from '@/lib/types';
+import { getPromises, getElectoralBonds, getPoliticalIncidents, getFactChecks } from '@/lib/firestore';
+import { Promise, ElectoralBond, PoliticalIncident, FactCheck } from '@/lib/types';
 import { TrendingUp, DollarSign, AlertTriangle, CheckCircle, ArrowRight, Users, MapPin, FileText } from 'lucide-react';
 
 export default function Home() {
   const [recentPromises, setRecentPromises] = useState<Promise[]>([]);
   const [totalBonds, setTotalBonds] = useState(0);
-  const [recentIncidents, setRecentIncidents] = useState<Incident[]>([]);
+  const [recentIncidents, setRecentIncidents] = useState<PoliticalIncident[]>([]);
   const [recentFacts, setRecentFacts] = useState<FactCheck[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +31,7 @@ export default function Home() {
         setTotalBonds(total);
 
         // Fetch recent incidents
-        const incidents = await getIncidents();
+        const incidents = await getPoliticalIncidents();
         setRecentIncidents(incidents.slice(0, 3) as Incident[]);
 
         // Fetch recent fact checks
