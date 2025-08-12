@@ -105,7 +105,7 @@ export default function AdminDashboard() {
       title: 'User Management',
       description: 'Manage admin users and permissions',
       icon: Users,
-      href: '/admin/users',
+      href: '/admin/incidents',
       color: 'purple',
       badge: 'Security'
     },
